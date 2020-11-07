@@ -27,7 +27,7 @@
 // Defaults
 enum class SOCKS5_DEFAULTS : std::uint8_t{
 	RSV		= 0x00,
-	SUPPORT_AUTH	= 0x02
+	SUPPORT_AUTH	= 0x01
 };
 
 // Currently supported AUTH Types (0x00 is default)
@@ -91,7 +91,7 @@ inline static int write_data(int net_file_des, void* buff_read_len, int buff_wri
 			}
 		}
 	}
-	return buff_write_len;
+	return num_write;
 }
 
 inline static void NEG_CHECK(int value, const char* message){
@@ -101,7 +101,7 @@ inline static void NEG_CHECK(int value, const char* message){
 	}
 }
 
-int create_socket_INADDR_ANY(int port, std::size_t backlog){
+static inline int create_socket_INADDR_ANY(int port, std::size_t backlog){
 	int sock_fd, ret;
 	sockaddr_in local;
 
