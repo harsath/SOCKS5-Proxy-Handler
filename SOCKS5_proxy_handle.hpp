@@ -8,7 +8,7 @@ class SOCKS5_Handle{
 	public:
 		virtual int read_proxy(std::size_t, void*) = 0;
 		virtual int write_proxy(std::size_t, void*) = 0;
-		virtual int connect_proxy_ip(const std::string&, std::uint16_t) = 0;
+		virtual int connect_proxy_ip(const std::string& server_ip, std::uint16_t server_port) = 0;
 		virtual ~SOCKS5_Handle() = default;
 };
 
@@ -19,7 +19,7 @@ class SOCKS5_NOAUTH final : public SOCKS5_Handle{
 		int _client_net_fd;
 	public:
 		SOCKS5_NOAUTH(const std::string& server_ip, std::uint16_t server_port);
-		int read_proxy(std::size_t num_read, void* buffer) override;
+		int read_proxy(std::size_t num_read, void* buffer) override{ return 1; };
 		int write_proxy(std::size_t num_write, void* buffer) override;
 		int connect_proxy_ip(const std::string& destination_ip, std::uint16_t destination_port) override;	
 		void client_greeting() noexcept;

@@ -76,15 +76,18 @@ inline static int read_data(int net_file_des, void* buffer, int buff_read_len){
 	return buff_read_len;
 }
 
-inline static int write_data(int net_file_des, void* buff_read_len, int buff_write_len){
+inline static int write_data(int net_file_des, void* buffer_, int buff_write_len){
 	int num_write, remain = buff_write_len;	
+	char* buffer = (char*)buffer_;
 	while(remain > 0){
-		if((num_write = write(net_file_des, buff_read_len, remain)) == -1){
+		// std::cout << "Writign it here" << std::endl;
+		if((num_write = write(net_file_des, buffer, remain)) == -1){
 			if(errno == EINTR || errno == EAGAIN){ continue; }
 			else{
 				if(num_write == buff_write_len){
 					return 0;
 				}else{
+					std::cout << num_write << std::endl;
 					remain -= num_write;
 					buff_write_len += num_write;
 				}

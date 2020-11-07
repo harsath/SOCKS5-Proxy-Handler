@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <memory>
+#include <string>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
@@ -29,6 +30,11 @@ int SOCKS5_NOAUTH::connect_proxy_ip(const std::string &destination_ip, std::uint
 	}
 	ret = connect(sock_fd, reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr));
 	this->_client_net_fd = sock_fd;
+	std::cout << "CONNECTED!" << std::endl;
+	std::cout << "FILED: " + std::to_string(sock_fd) << std::endl;
+
+	this->client_greeting();
+
 	return sock_fd;
 }
 
@@ -45,7 +51,9 @@ void SOCKS5_NOAUTH::client_greeting() noexcept {
 }
 
 int SOCKS5_NOAUTH::write_proxy(std::size_t num_write, void* buffer){
-	int write_len = SOCKS5::write_data(_client_net_fd, buffer, num_write);	
+	char* buffer_write = (char*) buffer;
+	std::cout << "Writing the data" << std::endl;
+	int write_len = SOCKS5::write_data(_client_net_fd, buffer_write, num_write);	
 	std::cout << write_len << std::endl;
 	return write_len;	
 }
