@@ -58,45 +58,6 @@ enum class SOCKS5_CCONNECTION_CMD : std::uint8_t{
 
 namespace SOCKS5{
 
-inline static int read_data(int net_file_des, void* buffer, int buff_read_len){
-	int num_read, remain = buff_read_len;			
-	while(remain > 0){
-		if((num_read = read(net_file_des, buffer, remain)) < 0){
-			if(errno == EINTR || errno == EAGAIN){ continue; }
-			else{
-				if(num_read == 0){
-					return 0;
-				}else{
-					remain -= num_read;
-					buff_read_len += num_read;
-				}
-			}
-		}
-	}
-	return buff_read_len;
-}
-
-inline static int write_data(int net_file_des, void* buffer_, int buff_write_len){
-	int num_write, remain = buff_write_len;	
-	char* buffer = (char*)buffer_;
-	while(remain > 0){
-		// std::cout << "Writign it here" << std::endl;
-		if((num_write = write(net_file_des, buffer, remain)) == -1){
-			if(errno == EINTR || errno == EAGAIN){ continue; }
-			else{
-				if(num_write == buff_write_len){
-					return 0;
-				}else{
-					std::cout << num_write << std::endl;
-					remain -= num_write;
-					buff_write_len += num_write;
-				}
-			}
-		}
-	}
-	return num_write;
-}
-
 inline static void NEG_CHECK(int value, const char* message){
 	if(value < 0){
 		std::perror(message);
@@ -104,30 +65,36 @@ inline static void NEG_CHECK(int value, const char* message){
 	}
 }
 
-static inline int create_socket_INADDR_ANY(int port, std::size_t backlog){
-	int sock_fd, ret;
-	sockaddr_in local;
+inline static int read_data(int net_file_des, char* buffer, int buff_read_len, int recv_flag){
+	int recv_ret = recv(net_file_des, buffer, buff_read_len, recv_flag);	
+	NEG_CHECK(recv_ret, "recv()");
+	return 0;
+}
 
-	sock_fd = socket(AF_INET, SOCK_STREAM, 0);
-	NEG_CHECK(sock_fd, "socket()");
+inline static int write_data(int net_file_des, char* buffer, int buff_write_len, int send_flags){
+	int send_ret = send(net_file_des, buffer, buff_write_len, send_flags);	
+	NEG_CHECK(send_ret, "send()");
+	return 0;
+}
 
-	int optval = 1;
-	ret = setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
-	NEG_CHECK(ret, "setsockopt()");
+static inline int create_socket_client(const char* name, std::uint16_t port){
+	hostent* hoste;
+	sockaddr_in addr;
+	if((hoste = gethostbyname(name)) == nullptr){
+		herror("gethostbyname()");
+		exit(EXIT_FAILURE);
+	}
+	
+	int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
+	NEG_CHECK(sock_fd,"socket()");
 
-	memset(&local, 0, sizeof(local));
-	local.sin_addr.s_addr = htonl(INADDR_ANY);
-	local.sin_family = AF_INET;
-	local.sin_port = htons(port);
-
-	ret = bind(sock_fd, reinterpret_cast<sockaddr*>(&local), sizeof(local));
-	NEG_CHECK(ret, "bind()");
-
-	ret = listen(sock_fd, backlog);
-	NEG_CHECK(ret, "listen()");
-
+	addr.sin_addr = *(reinterpret_cast<in_addr*>(hoste->h_addr));
+	addr.sin_port = htons(port);
+	addr.sin_family = AF_INET;
+	memset(addr.sin_zero, 0, 8);
+	int connect_ret = connect(sock_fd, reinterpret_cast<sockaddr*>(&addr), sizeof(sockaddr));
+	NEG_CHECK(connect_ret, "connect()");
 	return sock_fd;
-
 }
 
 } // end namespace SOCKS5
