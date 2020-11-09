@@ -1,7 +1,4 @@
-sending and receiving message blocks/TCP stream over SOCKS5 proxy (running locally or through network) with UNIX sockets is a pain, 
-I implemented this because I was frustrated myself trying to send TCP stream through a SOCKS5 server, so I implemented an abstraction
-over UNIX sockets for this `specific` purpose. The interface is super easy to use and you just need to link `SOCKS5_proxy_handle.cpp`
-during compilation.
+sending and receiving message blocks/TCP stream over SOCKS5 proxy (running locally or through network) with UNIX sockets is a pain, I implemented this because I was frustrated myself trying to send TCP stream through a SOCKS5 server, so I implemented an abstraction over UNIX sockets for this `specific` purpose. The interface is super easy to use and you just need to link `SOCKS5_proxy_handle.cpp` during compilation.
 
 Checkout `test.cpp` for the examples on how to use it.
 
