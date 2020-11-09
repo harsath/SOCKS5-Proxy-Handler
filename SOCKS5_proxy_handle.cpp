@@ -11,9 +11,7 @@
 
 // SOCKS5_NOAUTH implementation
 SOCKS5_NOAUTH::SOCKS5_NOAUTH(const std::string& serv_ip, std::uint16_t server_port)
-	: _socks_serv_ip{serv_ip}, _socks_serv_port{server_port} {
-		
-	}
+	: _socks_serv_ip{serv_ip}, _socks_serv_port{server_port} {}
 
 int SOCKS5_NOAUTH::connect_proxy_ip(const std::string &destination_ip, std::uint16_t destination_port){
 	this->_destination_ip = destination_ip;
@@ -38,13 +36,11 @@ int SOCKS5_NOAUTH::client_greeting() noexcept {
 
 	char server_choice[2];
 	int read_ret = SOCKS5::read_data(this->_client_net_fd, server_choice, sizeof(server_choice), 0);
-	// if(server_choice[0] == 0x05 && server_choice[1] == 0x00){
-	// 	std::cout << "Server accepted!" << std::endl;
-	// }else{
-	// 	std::cout << "NO, We got failed" << std::endl;
-	// }
-
-	this->client_connection_request();
+	if(server_choice[0] == 0x05 && server_choice[1] == 0x00){
+		this->client_connection_request();
+	}else{
+		return -1;	
+	}
 
 	return 0;
 }
@@ -78,28 +74,20 @@ int SOCKS5_NOAUTH::client_connection_request() noexcept {
 	char server_responce[reply_bytes];
 	int read_ret = SOCKS5::read_data(this->_client_net_fd, server_responce, sizeof(server_responce), 0);
 	
-	// if(server_responce[0] == 0x05 && server_responce[1] == 0x00){
-	// 	std::cout << "Yes, Granted!" << std::endl;
-	// }else{
-	// 	std::cout << "Nope, Not granted!" << std::endl;
-	// }
+	if(server_responce[0] == 0x05 && server_responce[1] == 0x00){
+		return 0;
+	}else{
+		return -1;
+	}
 
-	constexpr std::size_t cli_read_buffer_size = 2048;
-	char* cli_read_buffer = (char*)new char[cli_read_buffer_size];
+}
 
-	char request[1028] = "GET /json HTTP/1.1\r\nHost: 95.217.228.176\r\nUser-Agent: curl/7.65.2\r\nAccept: */*\r\n\r\n";
-
-	SOCKS5::write_data(this->_client_net_fd, request, 1028, 0);
-
-	SOCKS5::read_data(this->_client_net_fd, cli_read_buffer, cli_read_buffer_size, 0);
-
-	std::cout << cli_read_buffer << std::endl;
-
-	delete[] cli_read_buffer;
-
+int SOCKS5_NOAUTH::write_proxy(std::size_t num_write, const char* buffer){
+	SOCKS5::write_data(this->_client_net_fd, buffer, num_write, 0);
 	return 0;
 }
 
-int SOCKS5_NOAUTH::write_proxy(std::size_t num_write, void* buffer){
-	return 1;
+int SOCKS5_NOAUTH::read_proxy(std::size_t num_read, char *buffer){
+	SOCKS5::read_data(this->_client_net_fd, buffer, num_read, 0);
+	return 0;
 }

@@ -71,7 +71,7 @@ inline static int read_data(int net_file_des, char* buffer, int buff_read_len, i
 	return 0;
 }
 
-inline static int write_data(int net_file_des, char* buffer, int buff_write_len, int send_flags){
+inline static int write_data(int net_file_des, const char* buffer, int buff_write_len, int send_flags){
 	int send_ret = send(net_file_des, buffer, buff_write_len, send_flags);	
 	NEG_CHECK(send_ret, "send()");
 	return 0;
@@ -98,13 +98,3 @@ static inline int create_socket_client(const char* name, std::uint16_t port){
 }
 
 } // end namespace SOCKS5
-
-
-
-
-
-
-
-
-
-
