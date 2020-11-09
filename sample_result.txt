@@ -1,4 +1,4 @@
-$ g++ -Wall -std=c++17 SOCKS5_proxy_handle.cpp test.cpp 2>/dev/null && ./a.out
+$ (mkdir build && cd build && cmake .. && make && ./socks_handler 2>/dev/null)
 
 HTTP/1.1 200 OK
 Date: Mon, 09 Nov 2020 05:43:34 GMT
