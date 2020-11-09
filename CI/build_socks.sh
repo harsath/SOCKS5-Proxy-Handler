@@ -1,13 +1,10 @@
 #!/bin/bash
 set -e
 set -u
-SOCKS_LINK_FILE=$PWD/SOCKS5_proxy_handle.cpp
-SOCKS_TEST_FILE=$PWD/test.cpp
-BUILD_OUT_BIN="socks_test"
-COMPILER="g++"
-COMPILER_FLAGS=" -Wall -std=c++17 -o "
-if [[ -f ${SOCKS_LINK_FILE} ]] && [[ -f $SOCKS_TEST_FILE ]]; then
-	${COMPILER} ${COMPILER_FLAGS} ${BUILD_OUT_BIN} ${SOCKS_LINK_FILE} ${SOCKS_TEST_FILE} 2>/dev/null
+TARGET_FILE="test.cpp"
+if [[ -f ${TARGET_FILE} ]]; then
+	mkdir build && cd build
+	cmake .. && make
 	exit 0
 else
 	echo -e "[ERROR]\n"
