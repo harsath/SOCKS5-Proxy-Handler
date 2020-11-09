@@ -17,6 +17,7 @@ class SOCKS5_NOAUTH final : public SOCKS5_Handle{
 		std::string _socks_serv_ip, _destination_ip;
 		std::uint16_t _socks_serv_port, _destination_port;
 		int _client_net_fd;
+		int _set_destination_ip_type(const std::string& destination_ip) noexcept;
 	public:
 		SOCKS5_NOAUTH(const std::string& server_ip, std::uint16_t server_port);
 		int read_proxy(std::size_t num_read, char* buffer) override;

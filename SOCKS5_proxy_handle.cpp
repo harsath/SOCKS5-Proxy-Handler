@@ -2,19 +2,48 @@
 #include "SOCKS5_helpers.hpp"
 #include <cstdint>
 #include <cstdlib>
+#include <netdb.h>
+#include <netinet/in.h>
 #include <unistd.h>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
 
 // SOCKS5_NOAUTH implementation
 SOCKS5_NOAUTH::SOCKS5_NOAUTH(const std::string& serv_ip, std::uint16_t server_port)
 	: _socks_serv_ip{serv_ip}, _socks_serv_port{server_port} {}
 
+int SOCKS5_NOAUTH::_set_destination_ip_type(const std::string& destination_ip) noexcept {
+	addrinfo hints, *results, *temp;			
+	char ip_str_buffer[INET_ADDRSTRLEN];
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	
+	int status;
+	if((status = getaddrinfo(destination_ip.c_str(), nullptr, &hints, &results)) != 0){
+		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(status));
+		exit(EXIT_FAILURE);
+	}
+	for(temp = results; temp != nullptr; temp = temp->ai_next){
+		if(temp->ai_family == AF_INET){
+			sockaddr_in* ipv4 = reinterpret_cast<sockaddr_in*>(temp->ai_addr);
+			inet_ntop(temp->ai_family, &ipv4->sin_addr, ip_str_buffer, INET6_ADDRSTRLEN);
+		}
+	}
+	this->_destination_ip = ip_str_buffer;
+	freeaddrinfo(results);
+	return 0;
+}
+
 int SOCKS5_NOAUTH::connect_proxy_ip(const std::string &destination_ip, std::uint16_t destination_port){
-	this->_destination_ip = destination_ip;
+	this->_set_destination_ip_type(destination_ip);
+	// this->_destination_ip = destination_ip;
 	this->_destination_port = destination_port;
 
 	int cli_sock_fd = SOCKS5::create_socket_client(this->_socks_serv_ip.c_str(),  this->_socks_serv_port);
