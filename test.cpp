@@ -19,5 +19,7 @@ int main(int argc, char *argv[]){
 
 	std::cout << read_buffer_reply << std::endl;
 
+	delete[] read_buffer_reply;
+
 	return 0;
 }
