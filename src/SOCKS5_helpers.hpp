@@ -36,6 +36,12 @@ enum class SOCKS5_AUTH_TYPES : std::uint8_t{
 	USERPASS	= 0x02,
 };
 
+// DNS resolve locally & make resolution on SOCKS5's endpoint
+enum class SOCKS5_RESOLVE{
+	REMOTE_RESOLVE = 0x01,
+	LOCAL_RESOLVE = 0x02
+};
+
 // Anonymous SOCKS5 connect (NOAUTH default)
 enum class SOCKS5_CGREETING_NOAUTH : std::uint8_t{
 	VERSION		= 0x05,
@@ -95,6 +101,30 @@ static inline int create_socket_client(const char* name, std::uint16_t port){
 	int connect_ret = connect(sock_fd, reinterpret_cast<sockaddr*>(&addr), sizeof(sockaddr));
 	NEG_CHECK(connect_ret, "connect()");
 	return sock_fd;
+}
+
+// Local resolve
+static inline int DNS_local_resolve(const std::string& destination_ip, std::string& _destination_ip) noexcept {
+	addrinfo hints, *results, *temp;			
+	char ip_str_buffer[INET_ADDRSTRLEN];
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	
+	int status;
+	if((status = getaddrinfo(destination_ip.c_str(), nullptr, &hints, &results)) != 0){
+		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(status));
+		exit(EXIT_FAILURE);
+	}
+	for(temp = results; temp != nullptr; temp = temp->ai_next){
+		if(temp->ai_family == AF_INET){
+			sockaddr_in* ipv4 = reinterpret_cast<sockaddr_in*>(temp->ai_addr);
+			inet_ntop(temp->ai_family, &ipv4->sin_addr, ip_str_buffer, INET6_ADDRSTRLEN);
+		}
+	}
+	_destination_ip = ip_str_buffer;
+	freeaddrinfo(results);
+	return 0;
 }
 
 } // end namespace SOCKS5

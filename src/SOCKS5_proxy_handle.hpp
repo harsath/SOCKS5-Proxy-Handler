@@ -8,23 +8,25 @@ class SOCKS5_Handle{
 	public:
 		virtual int read_proxy(std::size_t, char*) = 0;
 		virtual int write_proxy(std::size_t, const char*) = 0;
-		virtual int connect_proxy_ip(const std::string& server_ip, std::uint16_t server_port) = 0;
+		virtual int connect_proxy_socks5(const std::string& server_ip, std::uint16_t server_port, 
+							SOCKS5_RESOLVE dns_resol = SOCKS5_RESOLVE::LOCAL_RESOLVE) = 0;
 		virtual ~SOCKS5_Handle() = default;
 };
 
 class SOCKS5_NOAUTH final : public SOCKS5_Handle{
 	private:
-		std::string _socks_serv_ip, _destination_ip;
+		std::string _socks_serv_ip, _destination_addr;
 		std::uint16_t _socks_serv_port, _destination_port;
 		int _client_net_fd;
-		int _set_destination_ip_type(const std::string& destination_ip) noexcept;
 	public:
 		SOCKS5_NOAUTH(const std::string& server_ip, std::uint16_t server_port);
 		int read_proxy(std::size_t num_read, char* buffer) override;
 		int write_proxy(std::size_t num_write, const char* buffer) override;
-		int connect_proxy_ip(const std::string& destination_ip, std::uint16_t destination_port) override;	
+		int connect_proxy_socks5(const std::string& destination_addr, std::uint16_t destination_port, 
+						SOCKS5_RESOLVE dns_resol = SOCKS5_RESOLVE::LOCAL_RESOLVE) override;	
 		int client_greeting() noexcept;
 		int client_connection_request() noexcept;
+		int remote_DNS_client_connection_request() noexcept;
 };
 
 class SOCKS5_Factory{

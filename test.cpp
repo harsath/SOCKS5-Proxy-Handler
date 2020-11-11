@@ -1,11 +1,12 @@
 #include "SOCKS5_proxy_handle.hpp"
+#include "SOCKS5_helpers.hpp"
 #include <iostream>
 #include <memory>
 
 int main(int argc, char *argv[]){
 	std::unique_ptr<SOCKS5_Handle> socket_handler = 
 		SOCKS5_Factory::CreateSocksClient(SOCKS5_Factory::SOCKS5_Type::SOCKS5_NOAUTH, "127.0.0.1", 9050);
-	socket_handler->connect_proxy_ip("ipinfo.io", 80); // connecting to public ip check site through Tor daemon's SOCKS server
+	socket_handler->connect_proxy_socks5("ipinfo.io", 80, SOCKS5_RESOLVE::LOCAL_RESOLVE); // connecting to public ip check site through Tor daemon's SOCKS server
 
 	// Reading the data;
 	std::string sample_request = "GET /ip HTTP/1.1\r\nHost: ipinfo.io\r\nUser-Agent: curl/7.65.2\r\n\r\n";
