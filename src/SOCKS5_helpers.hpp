@@ -27,7 +27,9 @@
 // Defaults
 enum class SOCKS5_DEFAULTS : std::uint8_t{
 	RSV		= 0x00,
-	SUPPORT_AUTH	= 0x01
+	SUPPORT_AUTH	= 0x02, 
+	VERSION		= 0x05,
+	VER_USERPASS	= 0x01
 };
 
 // Currently supported AUTH Types (0x00 is default)
@@ -44,9 +46,16 @@ enum class SOCKS5_RESOLVE{
 
 // Anonymous SOCKS5 connect (NOAUTH default)
 enum class SOCKS5_CGREETING_NOAUTH : std::uint8_t{
-	VERSION		= 0x05,
+	VERSION		= static_cast<std::uint8_t>(SOCKS5_DEFAULTS::VERSION),
 	NAUTH		= static_cast<std::uint8_t>(SOCKS5_DEFAULTS::SUPPORT_AUTH),
 	AUTH		= static_cast<std::uint8_t>(SOCKS5_AUTH_TYPES::NOAUTH) 
+};
+
+// User/Pass SOCKS5 AUTH
+enum class SOCKS5_CGREETING_AUTH : std::uint8_t{
+	VERSION		= static_cast<std::uint8_t>(SOCKS5_DEFAULTS::VERSION),
+	NAUTH		= static_cast<std::uint8_t>(SOCKS5_DEFAULTS::SUPPORT_AUTH),
+	AUTH		= static_cast<std::uint8_t>(SOCKS5_AUTH_TYPES::USERPASS) 
 };
 
 enum class SOCKS5_ADDR_TYPE : std::uint8_t{
