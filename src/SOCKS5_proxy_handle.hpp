@@ -35,10 +35,10 @@ class SOCKS5_Factory{
 			SOCKS5_NOAUTH
 		};
 		static std::unique_ptr<SOCKS5_Handle> CreateSocksClient(SOCKS5_Type type, 
-				const std::string& server_ip, std::uint16_t server_port){
+				const std::string& server_addr, std::uint16_t server_port){
 			switch(type){
 				case SOCKS5_Type::SOCKS5_NOAUTH:
-					return std::make_unique<SOCKS5_NOAUTH>(server_ip, server_port);
+					return std::make_unique<SOCKS5_NOAUTH>(server_addr, server_port);
 			}
 			throw "Invalid SOCKS5 Proxy Type";
 		}
