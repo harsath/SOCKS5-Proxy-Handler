@@ -5,9 +5,9 @@
 
 int main(int argc, char *argv[]){
 	std::unique_ptr<SOCKS5_Handle> socket_handler = 
-		SOCKS5_Factory::CreateSocksClient(SOCKS5_Factory::SOCKS5_Type::SOCKS5_NOAUTH, "127.0.0.1", 1080);
+		SOCKS5_Factory::CreateSocksClient(SOCKS5_Factory::SOCKS5_Type::SOCKS5_AUTH, "127.0.0.1", 9050);
 	// connecting to public ip check site through Tor daemon's SOCKS server and resolving the domain name remotly(Exit relay's endpoint)
-	socket_handler->connect_proxy_socks("www.ipinfo.io", 80, SOCKS5_RESOLVE::REMOTE_RESOLVE, "user", "pass"); 
+	socket_handler->connect_proxy_socks("www.ipinfo.io", 80, SOCKS5_RESOLVE::LOCAL_RESOLVE, "user", "pass"); 
 
 	// Reading the data;
 	std::string sample_request = "GET /ip HTTP/1.1\r\nHost: ipinfo.io\r\nUser-Agent: curl/7.65.2\r\n\r\n";
