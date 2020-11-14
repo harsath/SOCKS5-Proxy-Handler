@@ -27,7 +27,7 @@
 // Defaults
 enum class SOCKS5_DEFAULTS : std::uint8_t{
 	RSV		= 0x00,
-	SUPPORT_AUTH	= 0x02, 
+	SUPPORT_AUTH	= 0x01, 
 	VERSION		= 0x05,
 	VER_USERPASS	= 0x01
 };

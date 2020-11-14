@@ -12,7 +12,7 @@ class SOCKS5_Handle{
 		virtual int read_proxy(std::size_t, char*) = 0;
 		virtual int write_proxy(std::size_t, const char*) = 0;
 		int connect_proxy_socks(const std::string& server_ip, std::uint16_t server_port, SOCKS5_RESOLVE dns_resol,
-				const std::string& proxy_username=nullptr, const std::string& proxy_password=nullptr){
+				const std::string& proxy_username="", const std::string& proxy_password=""){
 			return this->connect_proxy_socks5(server_ip, server_port, dns_resol, proxy_username, proxy_password);
 		}
 		virtual ~SOCKS5_Handle() = default;
@@ -28,7 +28,7 @@ class SOCKS5_NOAUTH final : public SOCKS5_Handle{
 		int read_proxy(std::size_t num_read, char* buffer) override;
 		int write_proxy(std::size_t num_write, const char* buffer) override;
 		int connect_proxy_socks5(const std::string& destination_addr, std::uint16_t destination_port, SOCKS5_RESOLVE dns_resol, 
-				const std::string& proxy_username=nullptr, const std::string& proxy_password=nullptr) override;	
+				const std::string& proxy_username="", const std::string& proxy_password="") override;	
 		int client_greeting() const noexcept;
 		int client_connection_request() noexcept;
 		~SOCKS5_NOAUTH() = default;

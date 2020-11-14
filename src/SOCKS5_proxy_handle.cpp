@@ -29,6 +29,7 @@ int SOCKS5_NOAUTH::connect_proxy_socks5(const std::string& destination_addr, std
 		int cli_sock_fd = SOCKS5::create_socket_client(this->_socks_serv_ip.c_str(),  this->_socks_serv_port);
 
 		this->_client_net_fd = cli_sock_fd;
+
 		this->client_greeting();
 		this->client_connection_request();
 		return cli_sock_fd;
@@ -98,7 +99,7 @@ int SOCKS5_AUTH::client_greeting() const noexcept {
 	// [VERSION, NAUTH, AUTH]
 	std::vector<char> client_greeting_msg = {
 		static_cast<char>(SOCKS5_CGREETING_AUTH::VERSION),
-		static_cast<char>(0x01),
+		static_cast<char>(SOCKS5_CGREETING_AUTH::NAUTH),
 		static_cast<char>(SOCKS5_AUTH_TYPES::USERPASS)
 	}; 
 
