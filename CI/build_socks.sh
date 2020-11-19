@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 set -u
-TARGET_FILE="test.cpp"
+TARGET_FILE="example.cpp"
 if [[ -f ${TARGET_FILE} ]]; then
 	mkdir build && cd build
 	cmake .. && make
