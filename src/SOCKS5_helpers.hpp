@@ -92,6 +92,12 @@ inline static int write_data(int net_file_des, const char* buffer, int buff_writ
 	return 0;
 }
 
+inline static int close_connection(int net_fd){
+	int close_ret = ::close(net_fd);
+	NEG_CHECK(close_ret, "close()");
+	return 0;
+}
+
 static inline int create_socket_client(const char* name, std::uint16_t port){
 	hostent* hoste;
 	sockaddr_in addr;

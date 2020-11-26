@@ -20,6 +20,10 @@
 SOCKS5_NOAUTH::SOCKS5_NOAUTH(const std::string& serv_ip, std::uint16_t server_port)
 	: _socks_serv_ip{serv_ip}, _socks_serv_port{server_port} {}
 
+SOCKS5_NOAUTH::~SOCKS5_NOAUTH(){
+	SOCKS5::close_connection(this->_client_net_fd);
+}
+
 int SOCKS5_NOAUTH::connect_proxy_socks5(const std::string& destination_addr, std::uint16_t destination_port, SOCKS5_RESOLVE dns_resol,
 		const std::string& proxy_username, const std::string& proxy_password){
 	if(dns_resol == SOCKS5_RESOLVE::LOCAL_RESOLVE){
@@ -65,7 +69,6 @@ int SOCKS5_NOAUTH::client_greeting() const noexcept {
 	}
 	return 0;
 }
-
 
 // Local DNS resolved request handler
 int SOCKS5_NOAUTH::client_connection_request() noexcept {
@@ -113,6 +116,10 @@ int SOCKS5_AUTH::client_greeting() const noexcept {
 		return -1;	
 	}
 	return 0;
+}
+
+SOCKS5_AUTH::~SOCKS5_AUTH(){
+	SOCKS5::close_connection(this->_client_net_fd);
 }
 
 int SOCKS5_AUTH::client_auth_handler() const {
@@ -175,6 +182,7 @@ int SOCKS5_AUTH::connect_proxy_socks5(const std::string& destination_addr, std::
 int SOCKS5_AUTH::client_connection_request() noexcept {
 	return SOCKS5_Common::client_connection_request(this->_client_net_fd, this->_destination_addr, this->_destination_port);
 }
+
 
 int SOCKS5_Common::client_connection_request(int net_serv_fd, const std::string& destination_addr, const std::uint16_t& destination_port) noexcept {
 	// [VERSION, SOCKS_CMD, RESV(0x00), (SOCKS5 Addr Type)[TYPE, ADDR], DST_PORT]

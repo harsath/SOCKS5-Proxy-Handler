@@ -31,7 +31,7 @@ class SOCKS5_NOAUTH final : public SOCKS5_Handle{
 				const std::string& proxy_username="", const std::string& proxy_password="") override;	
 		int client_greeting() const noexcept;
 		int client_connection_request() noexcept;
-		~SOCKS5_NOAUTH() = default;
+		~SOCKS5_NOAUTH() override;
 };
 
 class SOCKS5_AUTH final : public SOCKS5_Handle{
@@ -49,7 +49,7 @@ class SOCKS5_AUTH final : public SOCKS5_Handle{
 		int client_greeting() const noexcept;
 		int client_connection_request() noexcept;
 		int client_auth_handler() const;
-		~SOCKS5_AUTH() = default;
+		~SOCKS5_AUTH() override;
 };
 
 class SOCKS5_Common{
