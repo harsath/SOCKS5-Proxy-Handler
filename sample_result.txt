@@ -13,4 +13,4 @@ Cache-Control: private
 
 185.220.101.3
 
--> In this case, 185.220.101.3 is a Tor exit node talking to ipinfo.io's server(see test.cpp)
+-> In this case, 185.220.101.3 is a Tor exit node talking to ipinfo.io's server(see example.cpp)

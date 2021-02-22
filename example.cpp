@@ -1,5 +1,4 @@
 #include "SOCKS5_proxy_handle.hpp"
-#include "SOCKS5_helpers.hpp"
 #include <iostream>
 #include <memory>
 

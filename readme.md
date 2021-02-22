@@ -1,5 +1,5 @@
 ### SOCKS5-Handler
-[![Build Status](https://travis-ci.org/harsathAI/SOCKS5-Proxy-Handler.svg?branch=master)](https://travis-ci.org/harsathAI/SOCKS5-Proxy-Handler)
+![Linux Actions Status](https://github.com/harsath/SOCKS5-Proxy-Handler/workflows/Linux/badge.svg)
 
 Sending and receiving message blocks/TCP stream over SOCKS5 proxy (running locally or through network) with UNIX sockets is a pain, I was frustrated myself trying to send TCP stream through a SOCKS5 server, so I implemented an abstraction over UNIX sockets for this ***specific*** purpose. The interface is super easy to use. Take a look at `example.cpp` for it's usage interface.
 
