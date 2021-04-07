@@ -134,7 +134,7 @@ static inline int DNS_local_resolve(const std::string& destination_ip, std::stri
 	for(temp = results; temp != nullptr; temp = temp->ai_next){
 		if(temp->ai_family == AF_INET){
 			sockaddr_in* ipv4 = reinterpret_cast<sockaddr_in*>(temp->ai_addr);
-			inet_ntop(temp->ai_family, &ipv4->sin_addr, ip_str_buffer, INET6_ADDRSTRLEN);
+			inet_ntop(temp->ai_family, &ipv4->sin_addr, ip_str_buffer, INET_ADDRSTRLEN);
 		}
 	}
 	_destination_ip = ip_str_buffer;
