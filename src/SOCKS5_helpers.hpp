@@ -1,7 +1,9 @@
 #pragma once
 #include <sys/types.h>
 #include <sys/socket.h>
+#if not defined (__APPLE__)
 #include <asm-generic/socket.h>
+#endif
 #include <cstdlib>
 #include <netinet/in.h>
 #include <sys/types.h>
